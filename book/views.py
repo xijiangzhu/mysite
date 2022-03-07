@@ -1,35 +1,22 @@
 from django.shortcuts import render
 from django.contrib import auth
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+from .models import User
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
 
-def index(request):
-    pass
-    return render(request,'book/index.html')
-
-def login(request):
-    pass
-    return render(request,'book/login.html')
-
-def register(request):
-    pass
-    return render(request,'book/register.html')
-
-def book_list(request):
-    pass
-    return render(request,'book/book_list.html')
-
+# 首页
 @csrf_exempt
 def index(request):
 		username = request.user
-		return render(request,'login/index.html',locals())
+		return render(request,'book/index.html',locals())
+
 # 用户注册
 @csrf_exempt
-def my_register(request):
+def register(request):
 	errors = []
 	account = None
 	password = None
@@ -53,21 +40,26 @@ def my_register(request):
 			errors.append('邮箱不能为空')
 		else:
 			email = request.POST.get('email')
+		if not request.POST.get('mobile'):
+			errors.append('手机号码不能为空')
+		else:
+			mobile = request.POST.get('mobile')
 		if password is not None:
 			if password == password2:
 				CompareFlag = True
 			else:
 				errors.append('两次输入密码不一致')
-		if account is not None and password is not None and password2 is not None and email is not None and CompareFlag :
+		if account is not None and password is not None and password2 is not None and email is not None and mobile is not None and CompareFlag :
 			user = User.objects.create_user(account,email,password)
 			user.save()
-			userlogin = auth.authenticate(username = account,password = password)
+			userlogin = auth.authenticate(username = account,password = password,mobile=mobile)
 			auth.login(request,userlogin)
-			return HttpResponseRedirect('/')
-	return render(request,'login/register.html', {'errors': errors})
+			return HttpResponseRedirect('/book/')
+	return render(request,'book/register.html', {'errors': errors})
 
+# 用户登录
 @csrf_exempt
-def my_login(request):
+def login(request):
 	errors =[]
 	account = None
 	password = None
@@ -85,13 +77,16 @@ def my_login(request):
 			if user is not None:
 				if user.is_active:
 					auth.login(request,user)
-					return HttpResponseRedirect('/')
+					return HttpResponseRedirect('/book/')
 				else:
 					errors.append('用户名错误')
 			else:
 				errors.append('用户名或密码错误')
-	return render(request,'login/login.html', {'errors': errors})
+	return render(request,'book/login.html', {'errors': errors})
 
-def my_logout(request):
+# 用户注销
+def logout(request):
 	auth.logout(request)
-	return HttpResponseRedirect('/')
+	return HttpResponseRedirect('/book/')
+
+
