@@ -4,6 +4,9 @@ from django.contrib import admin
 # Register your models here.
 from book.models import *
 
+admin.site.site_title = '后台管理'
+admin.site.site_header = "后台管理"
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = ('id','username','mobile','email','gender')
