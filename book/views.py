@@ -1,8 +1,27 @@
+from django.shortcuts import render
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+
+# Create your views here.
+
+def index(request):
+    pass
+    return render(request,'book/index.html')
+
+def login(request):
+    pass
+    return render(request,'book/login.html')
+
+def register(request):
+    pass
+    return render(request,'book/register.html')
+
+def book_list(request):
+    pass
+    return render(request,'book/book_list.html')
 
 @csrf_exempt
 def index(request):
@@ -76,4 +95,3 @@ def my_login(request):
 def my_logout(request):
 	auth.logout(request)
 	return HttpResponseRedirect('/')
-
