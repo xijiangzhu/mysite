@@ -93,12 +93,6 @@ def logout(request):
 	return HttpResponseRedirect('/')
 
 def book_list(request):
-	pass
-
-def test(request):
-	return render(request,'book/test.html')
-
-def book_list(request):
 	list = Book.objects.all()
 	paginator = Paginator(list,2)
 	page = request.GET.get('page')

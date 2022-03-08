@@ -29,8 +29,8 @@ class Category(models.Model):
 class Book(models.Model):
     choice_status = (
         (0,'正常'),
-        (1,'借出中'),
-        (2,'已借出'),
+        (1,'预定中'),
+        (2,'已借阅'),
         (3,'归还中'),
     )
     name = models.CharField(max_length=30,blank=False,verbose_name='书名')
@@ -39,8 +39,8 @@ class Book(models.Model):
     publisher = models.CharField(max_length=30,null=True,blank=False,verbose_name='出版社')
     create_time = models.DateTimeField(auto_now_add=True,verbose_name='入库时间')
     status = models.SmallIntegerField(choices=choice_status,default=0,verbose_name='书籍状态')
-    borrower = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True,blank=True,related_name='books_borrower',verbose_name='借出人')
-    borrow_time = models.DateTimeField(null=True,blank=True,verbose_name='借出时间')
+    borrower = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True,blank=True,related_name='books_borrower',verbose_name='借阅人')
+    borrow_time = models.DateTimeField(null=True,blank=True,verbose_name='借阅时间')
     class Meta:
         verbose_name_plural = '图书列表'
     def __str__(self):

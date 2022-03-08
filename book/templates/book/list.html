@@ -26,9 +26,9 @@
                 {% if b.status == 0 %}
                 <td><a href="/book/{{b.id}}/borrow/">借书</a></td>
                 {% elif b.status == 1 %}
-                <td>借出中</td>
+                <td>预定中</td>
                 {% elif b.status == 2 %}
-                <td>已借出</td>
+                <td>已借阅</td>
                 {% elif b.status == 3 %}
                 <td>归还中</td>
                 {% endif %}
