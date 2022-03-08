@@ -1,0 +1,60 @@
+{% extends "book/base.html" %}
+{% block content %}
+        <h3 class="sub-header">标题</h3>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>书名</th>
+                <th>类别</th>
+                <th>作者</th>
+                <th>出版社</th>
+                <th>入库时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for b in list %}
+              <tr>
+                <td>{{b.id}}</td>
+                <td><a href="/book/{{b.id}}/show/">{{b.name}}</a></td>
+                <td>{{b.category}}</td>
+                <td>{{b.author}}</td>
+                <td>{{b.publisher}}</td>
+                <td>{{b.create_time}}</td>
+                {% if b.status == 0 %}
+                <td><a href="/book/{{b.id}}/borrow/">借书</a></td>
+                {% elif b.status == 1 %}
+                <td>借出中</td>
+                {% elif b.status == 2 %}
+                <td>已借出</td>
+                {% elif b.status == 3 %}
+                <td>归还中</td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block page %}
+        <div class="pagination">
+          <span class="step-links">
+            {% if list.has_previous %}
+            <a href="?page={{ list.previous_page_number }}">上一页</a>
+            {% endif %}
+
+            <span class="current">
+              Page {{ list.number }} of {{ list.paginator.num_pages }}.
+            </span>
+
+            {% if list.has_next %}
+            <a href="?page={{ list.next_page_number }}">下一页</a>
+            {% endif %}
+          </span>
+        </div>
+{% endblock %}

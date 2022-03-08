@@ -1,0 +1,21 @@
+{% extends "book/base.html" %}
+{% block content %}
+<h3 class="sub-header">标题</h3>
+<div>
+{% for i in list1 %}
+<ul class='list-style'>
+  
+  <li>书名：{{i.name}}</li>
+  <li>作者：{{i.author}}</li>
+  <li>出版社：{{i.publisher}}</li>
+  <li>入库时间：{{i.create_time}}</li>
+  <li>类别：{{i.category_id}}</li>
+  <li>最近一次借书人：{{ borrower }}</li>
+  <li>最近一次借书时间：{{i.borrow_time}}</li>
+  <li>书籍状态：{{i.status}}</li>
+</ul>
+<a href="#" onclick="javascript:history.go(-1);">返回上一页</a>
+{% endfor %}
+</div>
+
+{% endblock %}

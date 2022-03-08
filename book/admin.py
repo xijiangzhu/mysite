@@ -12,7 +12,7 @@ class UserAdmin(admin.ModelAdmin):
     list_per_page = 50
     ordering = ('-id',)
 
-@admin.register(Books)
+@admin.register(Book)
 class BooksAdmin(admin.ModelAdmin):
     list_display = ('id','name','author','publisher','status','create_time','borrower','borrow_time')
     list_per_page = 50

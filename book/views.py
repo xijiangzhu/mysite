@@ -1,10 +1,13 @@
+from asyncio.proactor_events import _ProactorBaseWritePipeTransport
 from django.shortcuts import render
 from django.contrib import auth
 #from django.contrib.auth.models import User
-from .models import User
+from .models import *
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
+from django.utils import timezone
 
 # Create your views here.
 
@@ -54,7 +57,7 @@ def register(request):
 			user.save()
 			userlogin = auth.authenticate(username = account,password = password,mobile=mobile)
 			auth.login(request,userlogin)
-			return HttpResponseRedirect('/book/')
+			return HttpResponseRedirect('/')
 	return render(request,'book/register.html', {'errors': errors})
 
 # 用户登录
@@ -77,7 +80,7 @@ def login(request):
 			if user is not None:
 				if user.is_active:
 					auth.login(request,user)
-					return HttpResponseRedirect('/book/')
+					return HttpResponseRedirect('/')
 				else:
 					errors.append('用户名错误')
 			else:
@@ -87,6 +90,39 @@ def login(request):
 # 用户注销
 def logout(request):
 	auth.logout(request)
-	return HttpResponseRedirect('/book/')
+	return HttpResponseRedirect('/')
 
+def book_list(request):
+	pass
 
+def test(request):
+	return render(request,'book/test.html')
+
+def book_list(request):
+	list = Book.objects.all()
+	paginator = Paginator(list,2)
+	page = request.GET.get('page')
+	try:
+		list = paginator.page(page)
+	except PageNotAnInteger:
+		list = paginator.page(1)
+	except EmptyPage:
+		list = paginator.page(paginator.num_pages)
+	return render(request,'book/list.html',locals())
+
+def book_show(request,sid):
+	if request.method == 'GET':
+		list1 = Book.objects.filter(id=sid)
+		list2 = Book.objects.filter(id=sid).first()
+		obj = list2.borrower
+		if obj:
+			borrower = obj.username
+	return render(request,'book/show.html',locals())
+
+def book_borrow(request,bid):
+	username = request.user
+	if username == 'AnonymousUser':
+		return HttpResponseRedirect('/login/')
+	else:
+		obj = Book.objects.filter(id=bid).update(status=1,borrower=username,borrow_time=timezone.now())
+		return HttpResponseRedirect('/book/list/')

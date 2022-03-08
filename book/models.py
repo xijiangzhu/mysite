@@ -26,18 +26,19 @@ class Category(models.Model):
         return self.name
 
 # 图书列表
-class Books(models.Model):
+class Book(models.Model):
     choice_status = (
         (0,'正常'),
-        (1,'已借出'),
-        (2,'归还中'),
+        (1,'借出中'),
+        (2,'已借出'),
+        (3,'归还中'),
     )
     name = models.CharField(max_length=30,blank=False,verbose_name='书名')
+    category = models.ForeignKey(Category,on_delete=models.CASCADE,default='',blank=False,related_name='books_category',verbose_name='类别')
     author = models.CharField(max_length=30,null=True,blank=False,verbose_name='作者')
     publisher = models.CharField(max_length=30,null=True,blank=False,verbose_name='出版社')
-    category = models.ForeignKey(Category,on_delete=models.CASCADE,default='',blank=False,related_name='books_category',verbose_name='类别')
+    create_time = models.DateTimeField(auto_now_add=True,verbose_name='入库时间')
     status = models.SmallIntegerField(choices=choice_status,default=0,verbose_name='书籍状态')
-    create_time = models.DateTimeField(auto_now_add=True,verbose_name='添加时间')
     borrower = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True,blank=True,related_name='books_borrower',verbose_name='借出人')
     borrow_time = models.DateTimeField(null=True,blank=True,verbose_name='借出时间')
     class Meta:
