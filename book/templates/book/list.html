@@ -10,8 +10,8 @@
                 <th>类别</th>
                 <th>作者</th>
                 <th>出版社</th>
+                <th>库存</th>
                 <th>入库时间</th>
-                <th>操作</th>
               </tr>
             </thead>
             <tbody>
@@ -22,16 +22,8 @@
                 <td>{{b.category}}</td>
                 <td>{{b.author}}</td>
                 <td>{{b.publisher}}</td>
+                <td>{{b.count}}</td>
                 <td>{{b.create_time}}</td>
-                {% if b.status == 0 %}
-                <td><a href="/book/{{b.id}}/borrow/">借阅</a></td>
-                {% elif b.status == 1 %}
-                <td>预定中</td>
-                {% elif b.status == 2 %}
-                <td>已借阅</td>
-                {% elif b.status == 3 %}
-                <td>归还中</td>
-                {% endif %}
               </tr>
               {% endfor %}
             </tbody>

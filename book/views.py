@@ -12,12 +12,11 @@ from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
-# 首页
 @login_required
 def index(request):
 	return HttpResponseRedirect('/book/list/')
 
-# 用户注册
+
 @csrf_exempt
 def register(request):
 	errors = []
@@ -60,7 +59,7 @@ def register(request):
 			return HttpResponseRedirect('/')
 	return render(request,'book/register.html', {'errors': errors})
 
-# 用户登录
+
 @csrf_exempt
 def login(request):
 	errors =[]
@@ -87,12 +86,12 @@ def login(request):
 				errors.append('用户名或密码错误')
 	return render(request,'book/login.html', {'errors': errors})
 
-# 用户注销
+
 def logout(request):
 	auth.logout(request)
 	return HttpResponseRedirect('/login/')
 
-# 图书列表
+
 @login_required
 def book_list(request):
 	list = Book.objects.all()
@@ -106,37 +105,43 @@ def book_list(request):
 		list = paginator.page(paginator.num_pages)
 	return render(request,'book/list.html',locals())
 
-# 书籍详情
+
 @login_required
 def book_detail(request,sid):
 	if request.method == 'GET':
-		list1 = Book.objects.filter(id=sid)
-		list2 = Book.objects.filter(id=sid).first()
-		obj = list2.borrower
-		if obj:
-			borrower = obj.username
-	return render(request,'book/detail.html',locals())
+		obj_book = Book.objects.filter(id=sid)
+		return render(request,'book/detail.html',locals())
 
-# 借阅
+
 @login_required
 def book_borrow(request,bid):
-	if request.user == 'AnonymousUser':
-		return HttpResponseRedirect('/login/')
-	else:
-		obj = Book.objects.filter(id=bid).update(status=1,borrower=request.user,borrow_time=timezone.now())
-		return HttpResponseRedirect('/book/list/')
+	# 需要增加原子性操作
+	obj_book = Book.objects.filter(id=bid).first()
+	obj_book.count = obj_book.count -1
+	obj_book.save()
 
-# 我的借阅
+	user_id = User.objects.filter(username=request.user).first().id
+	obj_record = Record(username_id=user_id,book_id=bid,status=1)
+	obj_record.save()
+	return HttpResponseRedirect('/book/list/')
+
+
 @login_required
-def my_borrow(request):
+def book_return(request):
 	pass
 
-# 借阅历史
+
 @login_required
-def borrow_history(request):
+def book_myborrow(request):
 	pass
 
-# 个人中心
+
+@login_required
+def book_borrowrecord(request):
+	pass
+
+
 @login_required
 def user_center(request):
 	pass
+

@@ -14,11 +14,14 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Book)
 class BooksAdmin(admin.ModelAdmin):
-    list_display = ('id','name','author','publisher','status','create_time','borrower','borrow_time')
+    list_display = ('id','name','category','author','publisher','count','create_time',)
     list_per_page = 50
     ordering = ('id',)
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id','name')
-    
+
+@admin.register(Record)
+class RecordAdmin(admin.ModelAdmin):
+    list_display = ('m_time','username','book','status')

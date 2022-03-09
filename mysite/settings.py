@@ -133,3 +133,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'book.User'
 
 LOGIN_URL='/login/'
+
+#设置文件上传路径，图片上传、文件上传都会存放在此目录里
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
