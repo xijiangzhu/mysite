@@ -19,5 +19,7 @@ urlpatterns = [
     path('book/<int:bid>/borrow/',views.book_borrow,name='book_borrow'),
     path('book/myborrow/',views.book_myborrow,name='book_myborrow'),
     path('book/borrowrecord/',views.book_borrowrecord,name='book_borrowrecord'),
+    path('book/usercenter/',views.book_usercenter,name='book_usercenter'),
+
 
 ]

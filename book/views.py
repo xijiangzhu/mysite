@@ -95,7 +95,7 @@ def logout(request):
 @login_required
 def book_list(request):
 	list = Book.objects.all()
-	paginator = Paginator(list,2)
+	paginator = Paginator(list,4)
 	page = request.GET.get('page')
 	try:
 		list = paginator.page(page)
@@ -142,6 +142,6 @@ def book_borrowrecord(request):
 
 
 @login_required
-def user_center(request):
+def book_usercenter(request):
 	pass
 
