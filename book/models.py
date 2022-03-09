@@ -1,4 +1,3 @@
-from tabnanny import verbose
 from django.db import models
 
 # Create your models here.
@@ -34,7 +33,7 @@ class Book(models.Model):
     author = models.CharField(max_length=30,null=True,blank=False,verbose_name='作者')
     publisher = models.CharField(max_length=30,null=True,blank=False,verbose_name='出版社')
     count = models.IntegerField(default=1,verbose_name='库存')
-    img = models.ImageField(upload_to='book_img/%Y/%m/%d/',blank=True,null=True,default='book_img/default.ipg',verbose_name='书籍图片')
+    img = models.ImageField(upload_to='book_img/%Y/%m/%d/',blank=True,null=True,default='book_img/default.jpg',verbose_name='书籍图片')
     content = models.TextField(null=True,blank=True,verbose_name='内容简介')
     create_time = models.DateTimeField(auto_now_add=True,verbose_name='入库时间')
     #status = models.SmallIntegerField(choices=choice_status,default=0,verbose_name='书籍状态')

@@ -30,7 +30,11 @@
                 <td>{{b.category}}</td>
                 <td>{{b.author}}</td>
                 <td>{{b.publisher}}</td>
+                {% if b.count == 0 %}
+                <td style="color:red">{{b.count}}</td>
+                {% else %}
                 <td>{{b.count}}</td>
+                {% endif %}
                 <td>{{b.create_time}}</td>
               </tr>
               {% endfor %}
