@@ -17,16 +17,17 @@
                 <td>{{field.m_time}}</td>
                 <td>{{field.book}}</td>
                 <td>{{field.get_status_display}}</td>
-                {% if field.status == 2 %}
-                <td><a href="/book/{{field.id}}/return/">归还</a></td>
-                {% endif %}
+                <td>
+                  {% if field.status == 2 %}
+                    <a href="/book/{{field.id}}/return/">归还</a>
+                    </td>
+                  {% endif %}
               </tr>
               {% endfor %}
             </tbody>
           </table>
         </div>
-      </div>
-    </div>
+
 {% endblock %}
 
 {% block page %}
