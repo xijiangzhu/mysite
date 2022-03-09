@@ -1,4 +1,12 @@
 {% extends "book/base.html" %}
+{% block nav%}
+<ul class="nav nav-pills nav-stacked">
+  <li ><a href="/">图书列表</a></li>
+  <li><a href="/book/myborrow/">我的借阅</a></li>
+  <li class="active"><a href="/book/borrowrecord/">借阅历史<span class="sr-only">(current)</span></a></li>
+  <li><a href="/book/usercenter/">个人中心</a></li>
+</ul>
+{% endblock %}
 {% block content %}
         <h3 class="sub-header">借阅历史</h3>
         <div class="table-responsive">
@@ -31,7 +39,7 @@
             <a href="?page={{ obj_record.previous_page_number }}">上一页</a>
             {% endif %}
 
-            {% if obj_record.num > 1 %}
+            {% if obj_record.paginator.num_pages > 1 %}
             <span class="current">
               Page {{ obj_record.number }} of {{ obj_record.paginator.num_pages }}
             </span>

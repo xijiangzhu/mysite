@@ -1,6 +1,14 @@
 {% extends "book/base.html" %}
+{% block nav %}
+<ul class="nav nav-pills nav-stacked">
+  <li class="active"><a href="/">图书列表<span class="sr-only">(current)</span></a></li>
+  <li><a href="/book/myborrow/">我的借阅</a></li>
+  <li><a href="/book/borrowrecord/">借阅历史</a></li>
+  <li><a href="/book/usercenter/">个人中心</a></li>
+</ul>
+{% endblock %}
 {% block content %}
-        <h3 class="sub-header">标题</h3>
+        <h3 class="sub-header">图书列表</h3>
         <div class="table-responsive">
           <table class="table table-striped">
             <thead>
@@ -36,18 +44,18 @@
 {% block page %}
         <div class="pagination">
           <span class="step-links">
-            {% if list.has_previous %}
-            <a href="?page={{ list.previous_page_number }}">上一页</a>
+            {% if obj_book.has_previous %}
+            <a href="?page={{ obj_book.previous_page_number }}">上一页</a>
             {% endif %}
 
-            {% if obj_record.num > 1 %}
+            {% if obj_book.paginator.num_pages > 1 %}
             <span class="current">
-              Page {{ list.number }} of {{ list.paginator.num_pages }}
+              Page {{ obj_book.number }} of {{ obj_book.paginator.num_pages }}
             </span>
             {% endif %}
 
-            {% if list.has_next %}
-            <a href="?page={{ list.next_page_number }}">下一页</a>
+            {% if obj_book.has_next %}
+            <a href="?page={{ obj_book.next_page_number }}">下一页</a>
             {% endif %}
           </span>
         </div>

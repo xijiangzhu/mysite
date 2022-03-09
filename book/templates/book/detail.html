@@ -1,6 +1,14 @@
 {% extends "book/base.html" %}
+{% block nav %}
+<ul class="nav nav-pills nav-stacked">
+  <li class="active"><a href="/">图书列表<span class="sr-only">(current)</span></a></li>
+  <li><a href="/book/myborrow/">我的借阅</a></li>
+  <li><a href="/book/borrowrecord/">借阅历史</a></li>
+  <li><a href="/book/usercenter/">个人中心</a></li>
+</ul>
+{% endblock %}
 {% block content %}
-<h3 class="sub-header">标题</h3>
+<h3 class="sub-header">图书详情</h3>
 {% for i in obj_book %}
 <div class='row'>
   <div class="col-md-6"><img src="{% url 'index' %}media/{{i.img}}" /></div>
