@@ -13,11 +13,9 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 # 首页
+@login_required
 def index(request):
-	if request.user == "AnonymousUser":
-		return HttpResponseRedirect('/login/')
-	else:
-		return HttpResponseRedirect('/book/list/')
+	return HttpResponseRedirect('/book/list/')
 
 # 用户注册
 @csrf_exempt
@@ -94,6 +92,7 @@ def logout(request):
 	auth.logout(request)
 	return HttpResponseRedirect('/login/')
 
+# 图书列表
 @login_required
 def book_list(request):
 	list = Book.objects.all()
@@ -107,6 +106,7 @@ def book_list(request):
 		list = paginator.page(paginator.num_pages)
 	return render(request,'book/list.html',locals())
 
+# 书籍详情
 @login_required
 def book_detail(request,sid):
 	if request.method == 'GET':
@@ -117,6 +117,7 @@ def book_detail(request,sid):
 			borrower = obj.username
 	return render(request,'book/detail.html',locals())
 
+# 借阅
 @login_required
 def book_borrow(request,bid):
 	if request.user == 'AnonymousUser':
@@ -124,3 +125,18 @@ def book_borrow(request,bid):
 	else:
 		obj = Book.objects.filter(id=bid).update(status=1,borrower=request.user,borrow_time=timezone.now())
 		return HttpResponseRedirect('/book/list/')
+
+# 我的借阅
+@login_required
+def my_borrow(request):
+	pass
+
+# 借阅历史
+@login_required
+def borrow_hostory(request):
+	pass
+
+# 个人中心
+@login_required
+def user_center(request):
+	pass
