@@ -94,15 +94,15 @@ def logout(request):
 
 @login_required
 def book_list(request):
-	list = Book.objects.all()
-	paginator = Paginator(list,4)
+	obj_book = Book.objects.all()
+	paginator = Paginator(obj_book,10)
 	page = request.GET.get('page')
 	try:
-		list = paginator.page(page)
+		obj_book = paginator.page(page)
 	except PageNotAnInteger:
-		list = paginator.page(1)
+		obj_book = paginator.page(1)
 	except EmptyPage:
-		list = paginator.page(paginator.num_pages)
+		obj_book = paginator.page(paginator.num_pages)
 	return render(request,'book/list.html',locals())
 
 
@@ -117,9 +117,8 @@ def book_detail(request,sid):
 def book_borrow(request,bid):
 	# 需要增加原子性操作
 	obj_book = Book.objects.filter(id=bid).first()
-	obj_book.count = obj_book.count -1
+	obj_book.count = obj_book.count - 1
 	obj_book.save()
-
 	user_id = User.objects.filter(username=request.user).first().id
 	obj_record = Record(username_id=user_id,book_id=bid,status=1)
 	obj_record.save()
@@ -127,18 +126,47 @@ def book_borrow(request,bid):
 
 
 @login_required
-def book_return(request):
-	pass
+def book_myborrow(request):
+	obj_record = Record.objects.filter(username=request.user,status__lt=4)
+	paginator = Paginator(obj_record,10)
+	page = request.GET.get('page')
+	try:
+		obj_record = paginator.page(page)
+	except PageNotAnInteger:
+		obj_record = paginator.page(1)
+	except EmptyPage:
+		obj_record = paginator.page(paginator.num_pages)
+	return render(request,'book/myborrow.html',locals())
 
 
 @login_required
-def book_myborrow(request):
-	pass
+def book_return(request,rid):
+	# 需要增加原子性操作
+	obj_record1 = Record.objects.filter(id=rid).first()
+	bid = obj_record1.book_id
+	obj_book = Book.objects.filter(id=bid).first()
+	obj_book.count = obj_book.count + 1
+	obj_book.save()
+
+	obj_record = Record.objects.get(username=request.user,id=rid)
+	obj_record.status = 3
+	obj_record.save()
+	return HttpResponseRedirect('/book/myborrow/')
+
 
 
 @login_required
 def book_borrowrecord(request):
-	pass
+	obj_record = Record.objects.filter(username=request.user,status=4)
+	paginator = Paginator(obj_record,10)
+	page = request.GET.get('page')
+	try:
+		obj_record = paginator.page(page)
+	except PageNotAnInteger:
+		obj_record = paginator.page(1)
+	except EmptyPage:
+		obj_record = paginator.page(paginator.num_pages)
+	return render(request,'book/borrowrecord.html',locals())
 
 
 @login_required

@@ -59,5 +59,4 @@ class Record(models.Model):
     status = models.SmallIntegerField(choices=choice_status,verbose_name='状态')
     class Meta:
         verbose_name_plural = '操作记录'
-    def __str__(self):
-        return self.username
+

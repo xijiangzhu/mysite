@@ -15,7 +15,7 @@
               </tr>
             </thead>
             <tbody>
-              {% for b in list %}
+              {% for b in obj_book %}
               <tr>
                 <td>{{b.id}}</td>
                 <td><a href="/book/{{b.id}}/detail/">{{b.name}}</a></td>
@@ -40,9 +40,11 @@
             <a href="?page={{ list.previous_page_number }}">上一页</a>
             {% endif %}
 
+            {% if obj_record.num > 1 %}
             <span class="current">
               Page {{ list.number }} of {{ list.paginator.num_pages }}
             </span>
+            {% endif %}
 
             {% if list.has_next %}
             <a href="?page={{ list.next_page_number }}">下一页</a>

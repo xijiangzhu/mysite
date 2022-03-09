@@ -1,0 +1,50 @@
+{% extends "book/base.html" %}
+{% block content %}
+        <h3 class="sub-header">我的借阅</h3>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>时间</th>
+                <th>书名</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for field in obj_record %}
+              <tr>
+                <td>{{field.m_time}}</td>
+                <td>{{field.book}}</td>
+                <td>{{field.get_status_display}}</td>
+                {% if field.status == 2 %}
+                <td><a href="/book/{{field.id}}/return/">归还</a></td>
+                {% endif %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block page %}
+        <div class="pagination">
+          <span class="step-links">
+            {% if obj_record.has_previous %}
+            <a href="?page={{ obj_record.previous_page_number }}">上一页</a>
+            {% endif %}
+
+            {% if obj_record.num > 1 %}
+            <span class="current">
+              Page {{ obj_record.number }} of {{ obj_record.paginator.num_pages }}
+            </span>
+            {% endif %}
+
+            {% if obj_record.has_next %}
+            <a href="?page={{ obj_record.next_page_number }}">下一页</a>
+            {% endif %}
+          </span>
+        </div>
+{% endblock %}
