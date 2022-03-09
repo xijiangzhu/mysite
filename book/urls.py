@@ -10,7 +10,7 @@ urlpatterns = [
 
     # 图书管理
     path('book/list/',views.book_list,name='book_list'),
-    path('book/<int:sid>/show/',views.book_show,name='book_show'),
+    path('book/<int:sid>/detail/',views.book_detail,name='book_detail'),
     path('book/<int:bid>/borrow/',views.book_borrow,name='book_borrow'),
 
 ]

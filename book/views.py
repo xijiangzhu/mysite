@@ -1,4 +1,5 @@
 from asyncio.proactor_events import _ProactorBaseWritePipeTransport
+from threading import local
 from django.shortcuts import render
 from django.contrib import auth
 #from django.contrib.auth.models import User
@@ -8,14 +9,15 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.utils import timezone
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 # 首页
-@csrf_exempt
 def index(request):
-		username = request.user
-		return render(request,'book/index.html',locals())
+	if request.user == "AnonymousUser":
+		return HttpResponseRedirect('/login/')
+	else:
+		return HttpResponseRedirect('/book/list/')
 
 # 用户注册
 @csrf_exempt
@@ -90,8 +92,9 @@ def login(request):
 # 用户注销
 def logout(request):
 	auth.logout(request)
-	return HttpResponseRedirect('/')
+	return HttpResponseRedirect('/login/')
 
+@login_required
 def book_list(request):
 	list = Book.objects.all()
 	paginator = Paginator(list,2)
@@ -104,19 +107,20 @@ def book_list(request):
 		list = paginator.page(paginator.num_pages)
 	return render(request,'book/list.html',locals())
 
-def book_show(request,sid):
+@login_required
+def book_detail(request,sid):
 	if request.method == 'GET':
 		list1 = Book.objects.filter(id=sid)
 		list2 = Book.objects.filter(id=sid).first()
 		obj = list2.borrower
 		if obj:
 			borrower = obj.username
-	return render(request,'book/show.html',locals())
+	return render(request,'book/detail.html',locals())
 
+@login_required
 def book_borrow(request,bid):
-	username = request.user
-	if username == 'AnonymousUser':
+	if request.user == 'AnonymousUser':
 		return HttpResponseRedirect('/login/')
 	else:
-		obj = Book.objects.filter(id=bid).update(status=1,borrower=username,borrow_time=timezone.now())
+		obj = Book.objects.filter(id=bid).update(status=1,borrower=request.user,borrow_time=timezone.now())
 		return HttpResponseRedirect('/book/list/')
