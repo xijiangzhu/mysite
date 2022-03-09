@@ -133,7 +133,7 @@ def my_borrow(request):
 
 # 借阅历史
 @login_required
-def borrow_hostory(request):
+def borrow_history(request):
 	pass
 
 # 个人中心

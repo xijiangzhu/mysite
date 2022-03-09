@@ -13,6 +13,6 @@ urlpatterns = [
     path('book/<int:sid>/detail/',views.book_detail,name='book_detail'),
     path('book/<int:bid>/borrow/',views.book_borrow,name='book_borrow'),
     path('book/my_borrow/',views.my_borrow,name='my_borrow'),
-    path('book/borrow_hostory/',views.borrow_hostory,name='borrow_hostory'),
+    path('book/borrow_history/',views.borrow_history,name='borrow_hostiry'),
 
 ]
