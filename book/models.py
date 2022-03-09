@@ -55,8 +55,8 @@ class Record(models.Model):
     )
     m_time = models.DateTimeField(auto_now=True,verbose_name='更新时间')
     username = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='log_username',verbose_name='用户')
-    book = models.ForeignKey(Book,on_delete=models.CASCADE,related_name='log_book')
+    book = models.ForeignKey(Book,on_delete=models.CASCADE,related_name='log_book',verbose_name='书名')
     status = models.SmallIntegerField(choices=choice_status,verbose_name='状态')
     class Meta:
-        verbose_name_plural = '操作记录'
+        verbose_name_plural = '借阅记录'
 

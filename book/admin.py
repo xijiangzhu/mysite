@@ -24,4 +24,5 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Record)
 class RecordAdmin(admin.ModelAdmin):
-    list_display = ('m_time','username','book','status')
+    list_display = ('id','m_time','book','username','status')
+    list_per_page = 50
