@@ -1,90 +1,59 @@
-from asyncio.proactor_events import _ProactorBaseWritePipeTransport
-from threading import local
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib import auth
 #from django.contrib.auth.models import User
 from .models import *
+
+# Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
-from django.utils import timezone
 from django.contrib.auth.decorators import login_required
-# Create your views here.
+from django.contrib import sessions
+from .myforms import *
+
 
 @login_required
 def index(request):
 	return HttpResponseRedirect('/book/list/')
 
 
-@csrf_exempt
 def register(request):
-	errors = []
-	account = None
-	password = None
-	password2 = None
-	email = None
-	CompareFlag = False
-	if request.method == 'POST':
-		if not request.POST.get('account'):
-			errors.append('用户名不能为空')
-		else:
-			account = request.POST.get('account')
-		if not request.POST.get('password'):
-			errors.append('密码不能为空')
-		else:
-			password = request.POST.get('password')
-		if not request.POST.get('password2'):
-			errors.append('确认密码不能为空')
-		else:
-			password2 = request.POST.get('password2')
-		if not request.POST.get('email'):
-			errors.append('邮箱不能为空')
-		else:
-			email = request.POST.get('email')
-		if not request.POST.get('mobile'):
-			errors.append('手机号码不能为空')
-		else:
-			mobile = request.POST.get('mobile')
-		if password is not None:
-			if password == password2:
-				CompareFlag = True
-			else:
-				errors.append('两次输入密码不一致')
-		if account is not None and password is not None and password2 is not None and email is not None and mobile is not None and CompareFlag :
-			user = User.objects.create_user(account,email,password)
-			user.save()
-			userlogin = auth.authenticate(username = account,password = password,mobile=mobile)
-			auth.login(request,userlogin)
-			return HttpResponseRedirect('/')
-	return render(request,'book/register.html', {'errors': errors})
-
-
-@csrf_exempt
-def login(request):
-	errors =[]
-	account = None
-	password = None
 	if request.method == "POST":
-		if not request.POST.get('account'):
-			errors.append('用户名或密码不能为空')
-		else:
-			account = request.POST.get('account')
-		if not request.POST.get('password'):
-			errors = request.POST.get('密码不能为空')
-		else:
-			password = request.POST.get('password')
-		if account is not None and password is not None:
-			user = auth.authenticate(username=account,password=password)
-			if user is not None:
-				if user.is_active:
+		form = RegisterModelForm(request.POST)
+		if form.is_valid():
+			# 密码加密
+			user = form.save()
+			user.set_password(user.password)
+			user.save()
+			# 注册成功后自动登录
+			user = auth.authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
+			auth.login(request, user)
+			return HttpResponseRedirect('/book/list/')
+		return render(request,"book/register.html",{'form':form})
+	else:
+		form = RegisterModelForm()
+		return render(request,"book/register.html",{'form':form})
+
+
+def login(request):
+	# 已登录的用户访问登录页面，跳转到主页
+	if request.user.is_authenticated:
+		return HttpResponseRedirect('/')
+	else:
+		if request.method == 'POST':
+			form = LoginModelForm(request.POST)
+			if form.is_valid():
+				username = form.cleaned_data.get('username')
+				password = form.cleaned_data.get('password')
+				user = auth.authenticate(username=username,password=password)
+				if user:
 					auth.login(request,user)
 					return HttpResponseRedirect('/')
-				else:
-					errors.append('用户名错误')
-			else:
-				errors.append('用户名或密码错误')
-	return render(request,'book/login.html', {'errors': errors})
+			return render(request,'book/login.html', {'form': form})
+		else:
+			form = LoginModelForm()
+			return render(request,'book/login.html', {'form': form})
 
 
 def logout(request):
@@ -107,9 +76,9 @@ def book_list(request):
 
 
 @login_required
-def book_detail(request,sid):
+def book_detail(request,bid):
 	if request.method == 'GET':
-		obj_book = Book.objects.filter(id=sid)
+		obj_book = Book.objects.filter(id=bid)
 		return render(request,'book/detail.html',locals())
 
 
@@ -173,3 +142,7 @@ def book_borrowrecord(request):
 def book_usercenter(request):
 	pass
 
+
+@login_required
+def search(request):
+	pass

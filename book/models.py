@@ -1,8 +1,11 @@
+from django import forms
 from django.db import models
+from django.contrib import auth
 
 # Create your models here.
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
+from django import forms
 
 # 用户信息
 class User(AbstractUser):
@@ -11,9 +14,9 @@ class User(AbstractUser):
         ('female','女'),
     )
     gender = models.CharField(max_length=6,choices=choice_gender,default='male',verbose_name='性别')
-    mobile = models.IntegerField(null=True,blank=False,verbose_name='手机号')
+    mobile = models.IntegerField(null=True,blank=False,verbose_name='手机号码')
     class Meta:
-        verbose_name_plural = '用户'
+        verbose_name_plural = '用户列表'
     def __str__(self):
         return self.username
 
@@ -44,7 +47,7 @@ class Book(models.Model):
     def __str__(self):
         return self.name
 
-# 日志
+# 记录表
 class Record(models.Model):
     choice_status = (
         (1,'预定中'),
@@ -58,4 +61,5 @@ class Record(models.Model):
     status = models.SmallIntegerField(choices=choice_status,verbose_name='状态')
     class Meta:
         verbose_name_plural = '借阅记录'
+
 
