@@ -73,3 +73,11 @@ class LoginModelForm(forms.ModelForm):
             self.add_error('password','用户或密码错误！')
         else:
             return self.cleaned_data
+
+class UserinfoModelForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username','password','email','mobile','gender','last_login','date_joined']
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+

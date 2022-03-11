@@ -1,0 +1,25 @@
+{% extends "book/base.html" %}
+{% block nav %}
+<ul class="nav nav-pills nav-stacked">
+  <li ><a href="/">图书列表</a></li>
+  <li><a href="/book/myborrow/">我的借阅</a></li>
+  <li><a href="/book/borrowrecord/">借阅历史</a></li>
+  <li class="active"><a href="/book/usercenter/">个人中心<span class="sr-only">(current)</span></a></li>
+</ul>
+{% endblock %}
+{% block content %}
+        <h3 class="sub-header">个人中心</h3>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <tbody>
+              {% for field in form.data %}
+              <tr>
+                <td>{{ field.label }}</td>
+                <td>{{ field }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+{% endblock %}

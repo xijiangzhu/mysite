@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.contrib import auth
 #from django.contrib.auth.models import User
 from .models import *
@@ -140,9 +140,10 @@ def book_borrowrecord(request):
 
 @login_required
 def book_usercenter(request):
-	pass
+	form = UserinfoModelForm()
+	return render(request,'book/usercenter.html',{'form':form})
 
 
 @login_required
 def search(request):
-	pass
+	return HttpResponse('功能正在开发中！')
