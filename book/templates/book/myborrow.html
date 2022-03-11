@@ -15,6 +15,7 @@
               <tr>
                 <th>时间</th>
                 <th>书名</th>
+                <th>用户</th>
                 <th>状态</th>
                 <th>操作</th>
               </tr>
@@ -24,6 +25,7 @@
               <tr>
                 <td>{{field.m_time}}</td>
                 <td>{{field.book}}</td>
+                <td>{{field.username}}</td>
                 <td>{{field.get_status_display}}</td>
                 <td>
                     {% if field.status == 2 %}

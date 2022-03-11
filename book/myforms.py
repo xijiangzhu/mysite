@@ -75,9 +75,16 @@ class LoginModelForm(forms.ModelForm):
             return self.cleaned_data
 
 class UserinfoModelForm(forms.ModelForm):
+    last_login = forms.DateTimeField(label='最近登录时间',disabled=True)
+    date_joined = forms.DateTimeField(label='创建时间',disabled=True)
+    confirm_password = forms.CharField(widget=forms.PasswordInput(),label='确认密码',help_text='如不修改密码，请留空！')
     class Meta:
         model = User
-        fields = ['username','password','email','mobile','gender','last_login','date_joined']
+        fields = ['username','password','confirm_password','email','mobile','gender','last_login','date_joined']
+        widgets = {
+            'password': forms.PasswordInput(render_value=True),
+        }
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-
+        for field in self.fields.values():
+            field.widget.attrs.update({'class':'form-control'})

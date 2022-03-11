@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib import auth
 #from django.contrib.auth.models import User
 from .models import *
@@ -140,8 +140,10 @@ def book_borrowrecord(request):
 
 @login_required
 def book_usercenter(request):
-	form = UserinfoModelForm()
-	return render(request,'book/usercenter.html',{'form':form})
+	if request.method == 'GET':
+		obj_user = User.objects.get(id=request.user.id)
+		form = UserinfoModelForm(instance=obj_user)
+		return render(request,'book/usercenter.html',{'form':form,'obj_user':obj_user})
 
 
 @login_required
