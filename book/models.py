@@ -30,7 +30,6 @@ class Category(models.Model):
 
 # 图书列表
 class Book(models.Model):
-    #choice_status = ((0,'正常'),(1,'预定中'),(2,'已借阅'),(3,'归还中'),)
     name = models.CharField(max_length=30,blank=False,verbose_name='书名')
     category = models.ForeignKey(Category,on_delete=models.CASCADE,default='',blank=False,related_name='books_category',verbose_name='类别')
     author = models.CharField(max_length=30,null=True,blank=False,verbose_name='作者')
@@ -39,9 +38,6 @@ class Book(models.Model):
     img = models.ImageField(upload_to='book_img/%Y/%m/%d/',blank=True,null=True,default='book_img/default.jpg',verbose_name='书籍图片')
     content = models.TextField(null=True,blank=True,verbose_name='内容简介')
     create_time = models.DateTimeField(auto_now_add=True,verbose_name='入库时间')
-    #status = models.SmallIntegerField(choices=choice_status,default=0,verbose_name='书籍状态')
-    #borrower = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,null=True,blank=True,related_name='books_borrower',verbose_name='借阅人')
-    #borrow_time = models.DateTimeField(null=True,blank=True,verbose_name='借阅时间')
     class Meta:
         verbose_name_plural = '图书列表'
     def __str__(self):
