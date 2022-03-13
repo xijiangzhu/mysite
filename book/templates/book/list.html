@@ -3,64 +3,63 @@
 <ul class="nav nav-pills nav-stacked">
   <li class="active"><a href="/">图书列表<span class="sr-only">(current)</span></a></li>
   <li><a href="/book/myborrow/">我的借阅</a></li>
-  <li><a href="/book/borrowrecord/">借阅历史</a></li>
+  <li><a href="/book/record/">借阅记录</a></li>
   <li><a href="/book/usercenter/">个人中心</a></li>
 </ul>
 {% endblock %}
 {% block content %}
-        <h3 class="sub-header">图书列表</h3>
-        <div class="table-responsive">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>书名</th>
-                <th>类别</th>
-                <th>作者</th>
-                <th>出版社</th>
-                <th>库存</th>
-                <th>入库时间</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for b in obj_book %}
-              <tr>
-                <td>{{b.id}}</td>
-                <td><a href="/book/{{b.id}}/detail/">{{b.name}}</a></td>
-                <td>{{b.category}}</td>
-                <td>{{b.author}}</td>
-                <td>{{b.publisher}}</td>
-                {% if b.count == 0 %}
-                <td style="color:red">{{b.count}}</td>
-                {% else %}
-                <td>{{b.count}}</td>
-                {% endif %}
-                <td>{{b.create_time}}</td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+<h3 class="sub-header">图书列表</h3>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>书名</th>
+        <th>类别</th>
+        <th>作者</th>
+        <th>出版社</th>
+        <th>库存</th>
+        <th>入库时间</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for field in obj_book %}
+      <tr>
+        <td>{{field.id}}</td>
+        <td><a href="/book/{{field.id}}/detail/">{{field.name}}</a></td>
+        <td>{{field.category}}</td>
+        <td>{{field.author}}</td>
+        <td>{{field.publisher}}</td>
+        {% if field.count == 0 %}
+        <td style="color:red">{{field.count}}</td>
+        {% else %}
+        <td>{{field.count}}</td>
+        {% endif %}
+        <td>{{field.create_time}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 {% endblock %}
 
 {% block page %}
-        <div class="pagination">
-          <span class="step-links">
-            {% if obj_book.has_previous %}
-            <a href="?page={{ obj_book.previous_page_number }}">上一页</a>
-            {% endif %}
+<div class="pagination">
+  <span class="step-links">
+    {% if obj_book.has_previous %}
+    <a href="?page={{ obj_book.previous_page_number }}">上一页</a>
+    {% endif %}
 
-            {% if obj_book.paginator.num_pages > 1 %}
-            <span class="current">
-              Page {{ obj_book.number }} of {{ obj_book.paginator.num_pages }}
-            </span>
-            {% endif %}
+    {% if obj_book.paginator.num_pages > 1 %}
+    <span class="current">
+      Page {{ obj_book.number }} of {{ obj_book.paginator.num_pages }}
+    </span>
+    {% endif %}
 
-            {% if obj_book.has_next %}
-            <a href="?page={{ obj_book.next_page_number }}">下一页</a>
-            {% endif %}
-          </span>
-        </div>
+    {% if obj_book.has_next %}
+    <a href="?page={{ obj_book.next_page_number }}">下一页</a>
+    {% endif %}
+  </span>
+</div>
 {% endblock %}

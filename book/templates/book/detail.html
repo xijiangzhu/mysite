@@ -3,35 +3,62 @@
 <ul class="nav nav-pills nav-stacked">
   <li class="active"><a href="/">图书列表<span class="sr-only">(current)</span></a></li>
   <li><a href="/book/myborrow/">我的借阅</a></li>
-  <li><a href="/book/borrowrecord/">借阅历史</a></li>
+  <li><a href="/book/record/">借阅记录</a></li>
   <li><a href="/book/usercenter/">个人中心</a></li>
 </ul>
 {% endblock %}
 {% block content %}
 <h3 class="sub-header">图书详情</h3>
-{% for i in obj_book %}
+{% for field in obj_book %}
 <div class='row'>
-  <div class="col-md-6"><img src="{% url 'index' %}media/{{i.img}}" /></div>
-  <div class="col-md-6">
-    <ul class='list-style'>
-      <li>ID：{{i.id}}</li>
-      <li>书名：{{i.name}}</li>
-      <li>作者：{{i.author}}</li>
-      <li>出版社：{{i.publisher}}</li>
-      <li>入库时间：{{i.create_time}}</li>
-      <li>类别：{{i.category}}</li>
-      <li>库存：{{i.count}}</li>
-      <li>内容简介：{{i.content}}</li>
-    </ul>
+  <div class="col-md-5"><img src="{% url 'book_index' %}media/{{field.img}}" /></div>
+  <div class="col-md-7">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <tbody>
+          <tr>
+            <td>ID:</td>
+            <td>{{field.id}}</td>
+          </tr>
+          <tr>
+            <td>书名:</td>
+            <td>{{field.name}}</td>
+          </tr>
+          <tr>
+            <td>作者：</td>
+            <td>{{field.author}}</td>
+          </tr>
+          <tr>
+            <td>出版社：</td>
+            <td>{{field.publisher}}</td>
+          </tr>
+          <tr>
+            <td>入库时间：</td>
+            <td>{{field.create_time}}</td>
+          </tr>
+          <tr>
+            <td>类别：</td>
+            <td>{{field.category}}</td>
+          </tr>
+          <tr>
+            <td>库存：</td>
+            <td>{{field.count}}</td>
+          </tr>
+          <tr>
+            <td nowrap='nowrap'>内容简介：</td>
+            <td>{{field.content}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {% if field.count == 0 %}
+    <div class="btn btn-default"><a style="color:#CCC">预定</a></div>
+    {% else %}
+    <div class="btn btn-default"><a href="/book/{{field.id}}/borrow">预定</a></div>
+    {% endif %}
+
+    <div style="margin-top:50px"><a href="#" onclick="javascript:history.go(-1);">返回上一页</a></div>
   </div>
-
-{% if i.count <= 0 %}
-  <div class="btn btn-default"><a style="color:#CCC">借阅</a></div>
-{% else %}
-  <div class="btn btn-default"><a href="/book/{{i.id}}/borrow">借阅</a></div>
-{% endif %}
-
-  <div style="margin-top:400px"><a href="#" onclick="javascript:history.go(-1);">返回上一页</a></div>
-</div>
-{% endfor %}
-{% endblock %}
+  {% endfor %}
+  {% endblock %}

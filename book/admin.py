@@ -22,7 +22,7 @@ class BooksAdmin(admin.ModelAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id','name')
 
-@admin.register(Record)
-class RecordAdmin(admin.ModelAdmin):
-    list_display = ('id','m_time','book','username','status')
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id','username','book','m_time','status')
     list_per_page = 50

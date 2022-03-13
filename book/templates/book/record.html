@@ -1,14 +1,14 @@
 {% extends "book/base.html" %}
-{% block nav %}
+{% block nav%}
 <ul class="nav nav-pills nav-stacked">
   <li><a href="/">图书列表</a></li>
-  <li class="active"><a href="/book/myborrow/">我的借阅<span class="sr-only">(current)</span></a></li>
-  <li><a href="/book/record/">借阅记录</a></li>
+  <li><a href="/book/myborrow/">我的借阅</a></li>
+  <li class="active"><a href="/book/record/">借阅记录<span class="sr-only">(current)</span></a></li>
   <li><a href="/book/usercenter/">个人中心</a></li>
 </ul>
 {% endblock %}
 {% block content %}
-<h3 class="sub-header">我的借阅</h3>
+<h3 class="sub-header">借阅历史</h3>
 <div class="table-responsive">
   <table class="table table-striped">
     <thead>
@@ -17,7 +17,6 @@
         <th>书名</th>
         <th>用户</th>
         <th>状态</th>
-        <th>操作</th>
       </tr>
     </thead>
     <tbody>
@@ -27,13 +26,6 @@
         <td>{{field.book}}</td>
         <td>{{field.username}}</td>
         <td>{{field.get_status_display}}</td>
-        <td>
-          {% if field.status == 2 %}
-          <a href="/book/{{field.id}}/return/">归还</a>
-          {% else %}
-          <a>待审核</a>
-        </td>
-        {% endif %}
       </tr>
       {% endfor %}
     </tbody>

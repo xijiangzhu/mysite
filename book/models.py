@@ -47,8 +47,8 @@ class Book(models.Model):
     def __str__(self):
         return self.name
 
-# 记录表
-class Record(models.Model):
+# 订单表
+class Order(models.Model):
     choice_status = (
         (1,'预定中'),
         (2,'已借阅'),
@@ -60,6 +60,6 @@ class Record(models.Model):
     book = models.ForeignKey(Book,on_delete=models.CASCADE,related_name='log_book',verbose_name='书名')
     status = models.SmallIntegerField(choices=choice_status,verbose_name='状态')
     class Meta:
-        verbose_name_plural = '借阅记录'
+        verbose_name_plural = '借阅订单'
 
 

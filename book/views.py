@@ -62,7 +62,7 @@ def logout(request):
 
 
 @login_required
-def book_list(request):
+def list(request):
 	obj_book = Book.objects.all()
 	paginator = Paginator(obj_book,10)
 	page = request.GET.get('page')
@@ -76,27 +76,27 @@ def book_list(request):
 
 
 @login_required
-def book_detail(request,bid):
+def detail(request,bid):
 	if request.method == 'GET':
 		obj_book = Book.objects.filter(id=bid)
 		return render(request,'book/detail.html',locals())
 
 
 @login_required
-def book_borrow(request,bid):
+def borrow(request,bid):
 	# 需要增加原子性操作
 	obj_book = Book.objects.filter(id=bid).first()
 	obj_book.count = obj_book.count - 1
 	obj_book.save()
 	user_id = User.objects.filter(username=request.user).first().id
-	obj_record = Record(username_id=user_id,book_id=bid,status=1)
+	obj_record = Order(username_id=user_id,book_id=bid,status=1)
 	obj_record.save()
 	return HttpResponseRedirect('/book/list/')
 
 
 @login_required
-def book_myborrow(request):
-	obj_record = Record.objects.filter(username=request.user,status__lt=4)
+def myborrow(request):
+	obj_record = Order.objects.filter(username=request.user,status__lt=4).order_by('-m_time')
 	paginator = Paginator(obj_record,10)
 	page = request.GET.get('page')
 	try:
@@ -109,15 +109,15 @@ def book_myborrow(request):
 
 
 @login_required
-def book_return(request,rid):
+def returning(request,rid):
 	# 需要增加原子性操作
-	obj_record1 = Record.objects.filter(id=rid).first()
+	obj_record1 = Order.objects.filter(id=rid).first()
 	bid = obj_record1.book_id
 	obj_book = Book.objects.filter(id=bid).first()
 	obj_book.count = obj_book.count + 1
 	obj_book.save()
 
-	obj_record = Record.objects.get(username=request.user,id=rid)
+	obj_record = Order.objects.get(username=request.user,id=rid)
 	obj_record.status = 3
 	obj_record.save()
 	return HttpResponseRedirect('/book/myborrow/')
@@ -125,8 +125,8 @@ def book_return(request,rid):
 
 
 @login_required
-def book_borrowrecord(request):
-	obj_record = Record.objects.filter(username=request.user,status=4)
+def record(request):
+	obj_record = Order.objects.filter(username=request.user,status=4).order_by('-m_time')
 	paginator = Paginator(obj_record,10)
 	page = request.GET.get('page')
 	try:
@@ -135,11 +135,11 @@ def book_borrowrecord(request):
 		obj_record = paginator.page(1)
 	except EmptyPage:
 		obj_record = paginator.page(paginator.num_pages)
-	return render(request,'book/borrowrecord.html',locals())
+	return render(request,'book/record.html',locals())
 
 
 @login_required
-def book_usercenter(request):
+def usercenter(request):
 	if request.method == 'GET':
 		obj_user = User.objects.get(id=request.user.id)
 		form = UserinfoModelForm(instance=obj_user)
