@@ -137,22 +137,28 @@ def record(request):
 		obj_record = paginator.page(paginator.num_pages)
 	return render(request,'book/record.html',locals())
 
-
+from django.contrib.auth.forms import UserChangeForm
 @login_required
-def usercenter(request):
-	obj_user = User.objects.get(id=request.user.id)
+def usercenter(request, slug=None):
+	"""
+	Editar usuario de forma simple.
+	"""
+	username = request.user
 	if request.method == 'POST':
-		form = UserinfoModelForm(request.POST,instance=obj_user)
-		print(request.POST)
-		print(form.errors)
-		print(form.is_valid())
+		form = UserEdit(request.POST, instance=username)
 		if form.is_valid():
-			print(form.cleaned_data)
-			form.save()
+			# 密码加密
+			user = form.save()
+			user.set_password(user.password)
+			user.save()
+			#Emessages.success(request, 'Usuario actualizado exitosamente.', extra_tags='html_dante')
 			return HttpResponseRedirect('/book/usercenter/')
-	elif request.method == 'GET':
-		form = UserinfoModelForm(instance=obj_user)
-	return render(request,'book/usercenter.html',{'form':form,'obj_user':obj_user})
+	else:
+		form = UserEdit(instance=username)
+		context = {
+        	'form': form,
+    	}
+	return render(request, 'book/usercenter.html', context)
 
 
 

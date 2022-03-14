@@ -135,3 +135,32 @@ class UserinfoModelForm(forms.ModelForm):
             else:
                 return self.cleaned_data
         return self.cleaned_data
+
+
+from django.contrib.auth.forms import UserChangeForm
+class UserEdit(UserChangeForm):
+    password = forms.CharField(label='密码',)
+    confirm_password = forms.CharField(label='确认密码',required=False)
+    
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'mobile', 'password','confirm_password')
+        #exclude = ('password',)
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.update({'class':'form-control'})
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        if password.isdigit():
+            raise forms.ValidationError("密码不能是纯数字！")
+        else:
+            return password
+
+    def clean_confirm_password(self):
+        password = self.cleaned_data.get("password")
+        confirm_password = self.cleaned_data.get("confirm_password")
+        if password != confirm_password:
+            raise forms.ValidationError("两次密码不一致！")
+        else:
+            return confirm_password
