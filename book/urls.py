@@ -21,6 +21,6 @@ urlpatterns = [
     path('book/myborrow/',views.myborrow,name='book_myborrow'),
     path('book/record/',views.record,name='book_record'),
     path('book/usercenter/',views.usercenter,name='book_usercenter'),
-
+    path('book/search/',views.search,name='book_search'),
 
 ]

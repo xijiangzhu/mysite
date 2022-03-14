@@ -30,10 +30,10 @@ def register(request):
 			user = auth.authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
 			auth.login(request, user)
 			return HttpResponseRedirect('/book/list/')
-		return render(request,"book/register.html",{'form':form})
+
 	else:
 		form = RegisterModelForm()
-		return render(request,"book/register.html",{'form':form})
+	return render(request,"book/register.html",{'form':form})
 
 
 def login(request):
@@ -140,12 +140,32 @@ def record(request):
 
 @login_required
 def usercenter(request):
-	if request.method == 'GET':
-		obj_user = User.objects.get(id=request.user.id)
+	obj_user = User.objects.get(id=request.user.id)
+	if request.method == 'POST':
+		form = UserinfoModelForm(request.POST,instance=obj_user)
+		print(request.POST)
+		print(form.errors)
+		print(form.is_valid())
+		if form.is_valid():
+			print(form.cleaned_data)
+			form.save()
+			return HttpResponseRedirect('/book/usercenter/')
+	elif request.method == 'GET':
 		form = UserinfoModelForm(instance=obj_user)
-		return render(request,'book/usercenter.html',{'form':form,'obj_user':obj_user})
+	return render(request,'book/usercenter.html',{'form':form,'obj_user':obj_user})
+
 
 
 @login_required
 def search(request):
-	return HttpResponse('功能正在开发中！')
+	search = request.GET.get('search')
+	obj_book = Book.objects.filter(name__icontains=search)
+	paginator = Paginator(obj_book,10)
+	page = request.GET.get('page')
+	try:
+		obj_book = paginator.page(page)
+	except PageNotAnInteger:
+		obj_book = paginator.page(1)
+	except EmptyPage:
+		obj_book = paginator.page(paginator.num_pages)
+	return render(request,'book/list.html',locals())

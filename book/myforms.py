@@ -80,7 +80,8 @@ class LoginModelForm(forms.ModelForm):
 class UserinfoModelForm(forms.ModelForm):
     last_login = forms.DateTimeField(label='最近登录时间',disabled=True)
     date_joined = forms.DateTimeField(label='创建时间',disabled=True)
-    confirm_password = forms.CharField(widget=forms.PasswordInput(),label='确认密码',help_text='如不修改密码，请留空！')
+    password = forms.CharField(widget=forms.PasswordInput(),label='密码',required=False)
+    confirm_password = forms.CharField(widget=forms.PasswordInput(),label='确认密码',required=False,)
     class Meta:
         model = User
         fields = ['username','password','confirm_password','email','mobile','gender','last_login','date_joined']
@@ -89,5 +90,48 @@ class UserinfoModelForm(forms.ModelForm):
         }
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
+        self.fields['password'].widget = forms.PasswordInput(attrs={'placeholder': '留空表示不修改密码'}) 
         for field in self.fields.values():
             field.widget.attrs.update({'class':'form-control'})
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+        user_obj = User.objects.filter(username=username).first()
+        if user_obj:
+            del self.cleaned_data['username']
+            raise forms.ValidationError("该用户已经存在！")
+        else:
+            return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        user_obj = User.objects.filter(email=email).first()
+        if user_obj:
+            raise forms.ValidationError("该邮箱已经存在！")
+        else:
+            return email
+
+    def clean_mobile(self):
+        mobile = self.cleaned_data.get("mobile")
+        user_obj = User.objects.filter(mobile=mobile).first()
+        if user_obj:
+            raise forms.ValidationError("该手机号码已经存在！")
+        else:
+            return mobile
+
+    def clean_password(self):
+        password = self.cleaned_data.get("confirm_password")
+        if password:
+            if password.isdigit():
+                raise forms.ValidationError("密码不能是纯数字！")
+            return password
+        
+    
+    def clean_confirm_password(self):     
+        confirm_password = self.cleaned_data.get("confirm_password")
+        if confirm_password:
+            password = self.cleaned_data.get("password")
+            if password != confirm_password:
+                self.add_error("confirm_password",forms.ValidationError("两次密码输入不一致！"))
+            else:
+                return self.cleaned_data
+        return self.cleaned_data
