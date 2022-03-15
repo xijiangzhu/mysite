@@ -11,12 +11,14 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('id','username','mobile','email','gender')
     list_per_page = 50
     ordering = ('-id',)
+    list_filter = ('username','mobile','email')
 
 @admin.register(Book)
 class BooksAdmin(admin.ModelAdmin):
     list_display = ('id','name','category','author','publisher','count','create_time',)
     list_per_page = 50
     ordering = ('id',)
+    list_filter = ('name','category',)
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -26,3 +28,4 @@ class CategoryAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id','username','book','m_time','status')
     list_per_page = 50
+    list_filter = ('status','id','book','username')
