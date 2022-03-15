@@ -1,13 +1,15 @@
 from django import forms
 from .models import *
 from django.contrib.auth.forms import UserChangeForm
+from captcha.fields import CaptchaField
 
 class RegisterModelForm(forms.ModelForm):
     email = forms.EmailField(min_length=4,max_length=50,widget=forms.EmailInput,label='邮箱')
     password = forms.CharField(min_length=8,max_length=20,widget=forms.widgets.PasswordInput(),label='密码',)
     confirm_password = forms.CharField(widget=forms.widgets.PasswordInput(),label='确认密码')
+    #captcha = CaptchaField(label='验证码',required=True,error_messages={'required': '验证码不能为空'})
     class Meta:
-        model = User
+        model = UserProfile
         fields = ['username','password','confirm_password','email','mobile','gender',]
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -15,14 +17,14 @@ class RegisterModelForm(forms.ModelForm):
             field.widget.attrs.update({'class':'form-control'})   
     def clean_username(self):
         username = self.cleaned_data.get("username")
-        user_obj = User.objects.filter(username=username).first()
+        user_obj = UserProfile.objects.filter(username=username).first()
         if user_obj:
             raise forms.ValidationError("该用户已经存在！")
         else:
             return username
     def clean_email(self):
         email = self.cleaned_data.get("email")
-        user_obj = User.objects.filter(email=email).first()
+        user_obj = UserProfile.objects.filter(email=email).first()
         if user_obj:
             raise forms.ValidationError("该邮箱已经存在！")
         else:
@@ -31,7 +33,7 @@ class RegisterModelForm(forms.ModelForm):
         mobile = self.cleaned_data.get("mobile")
         if mobile is None:
             raise forms.ValidationError("手机号码不能为空！")
-        user_obj = User.objects.filter(mobile=mobile).first()
+        user_obj = UserProfile.objects.filter(mobile=mobile).first()
         if user_obj:
             raise forms.ValidationError("该手机号码已经存在！")
         else:
@@ -53,8 +55,9 @@ class RegisterModelForm(forms.ModelForm):
 
 class LoginModelForm(forms.ModelForm):
     password = forms.CharField(widget=forms.widgets.PasswordInput(),label='密码',)
+    #captcha = CaptchaField(label='验证码',required=True,error_messages={'required': '验证码不能为空'})
     class Meta:
-        model = User
+        model = UserProfile
         fields = ['username','password',]
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -76,7 +79,7 @@ class UserEdit(UserChangeForm):
     date_joined = forms.DateTimeField(label='注册日期',disabled=True)
     
     class Meta:
-        model = User
+        model = UserProfile
         fields = ('username', 'email', 'mobile', 'password','gender','last_login','date_joined')
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)

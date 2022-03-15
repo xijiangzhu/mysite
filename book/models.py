@@ -8,13 +8,13 @@ from django.conf import settings
 from django import forms
 
 # 用户信息
-class User(AbstractUser):
+class UserProfile(AbstractUser):
     choice_gender = (
         ('male','男'),
         ('female','女'),
     )
     gender = models.CharField(max_length=6,choices=choice_gender,default='male',verbose_name='性别')
-    mobile = models.IntegerField(null=True,blank=True,verbose_name='手机号码')
+    mobile = models.IntegerField(null=True,verbose_name='手机号码')
     class Meta:
         verbose_name_plural = '用户列表'
     def __str__(self):

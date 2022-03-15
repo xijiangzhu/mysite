@@ -1,14 +1,16 @@
 from django.shortcuts import redirect, render
 from django.contrib import auth
 #from django.contrib.auth.models import User
-from .models import *
 
 # Create your views here.
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from .forms import *
+from .models import *
+from django.db import transaction
 
 
 @login_required
@@ -28,14 +30,12 @@ def register(request):
 			user = auth.authenticate(username=form.cleaned_data.get('username'), password=form.cleaned_data.get('password'))
 			auth.login(request, user)
 			return HttpResponseRedirect('/book/list/')
-
 	else:
 		form = RegisterModelForm()
 	return render(request,"book/register.html",{'form':form})
 
 
 def login(request):
-	# 已登录的用户访问登录页面，跳转到主页
 	if request.user.is_authenticated:
 		return HttpResponseRedirect('/')
 	else:
@@ -77,61 +77,62 @@ def list(request):
 def detail(request,bid):
 	if request.method == 'GET':
 		obj_book = Book.objects.filter(id=bid)
+		obj_order = Order.objects.filter(username=request.user,book_id=bid,status__lt=4).first()
 		return render(request,'book/detail.html',locals())
 
 
-@login_required
 def borrow(request,bid):
-	# 需要增加原子性操作
 	obj_book = Book.objects.filter(id=bid).first()
-	obj_book.count = obj_book.count - 1
-	obj_book.save()
-	user_id = User.objects.filter(username=request.user).first().id
-	obj_record = Order(username_id=user_id,book_id=bid,status=1)
-	obj_record.save()
-	return HttpResponseRedirect('/book/list/')
+	user_id = UserProfile.objects.filter(username=request.user).first().id
+	with transaction.atomic():
+		obj_book.count = obj_book.count - 1
+		obj_order = Order(username_id=user_id,book_id=bid,status=1)
+			
+		obj_book.save()
+		obj_order.save()
+		return HttpResponseRedirect(reverse('book_list'))
 
 
 @login_required
 def myborrow(request):
-	obj_record = Order.objects.filter(username=request.user,status__lt=4).order_by('-m_time')
-	paginator = Paginator(obj_record,10)
+	obj_order = Order.objects.filter(username=request.user,status__lt=4).order_by('-m_time')
+	paginator = Paginator(obj_order,10)
 	page = request.GET.get('page')
 	try:
-		obj_record = paginator.page(page)
+		obj_order = paginator.page(page)
 	except PageNotAnInteger:
-		obj_record = paginator.page(1)
+		obj_order = paginator.page(1)
 	except EmptyPage:
-		obj_record = paginator.page(paginator.num_pages)
+		obj_order = paginator.page(paginator.num_pages)
 	return render(request,'book/myborrow.html',locals())
 
 
 @login_required
-def returning(request,rid):
-	# 需要增加原子性操作
-	obj_record1 = Order.objects.filter(id=rid).first()
-	bid = obj_record1.book_id
+def returning(request,oid):
+	#obj_order1 = Order.objects.filter(id=rid).first()
+	bid = Order.objects.filter(id=oid).first().book_id
 	obj_book = Book.objects.filter(id=bid).first()
-	obj_book.count = obj_book.count + 1
-	obj_book.save()
-
-	obj_record = Order.objects.get(username=request.user,id=rid)
-	obj_record.status = 3
-	obj_record.save()
+	#bid = obj_order1.book_id
+	obj_order = Order.objects.get(username=request.user,id=oid)
+	with transaction.atomic():
+		obj_book.count = obj_book.count + 1
+		obj_order.status = 3
+		obj_book.save()
+		obj_order.save()
 	return HttpResponseRedirect('/book/myborrow/')
 
 
 @login_required
 def record(request):
-	obj_record = Order.objects.filter(username=request.user,status=4).order_by('-m_time')
-	paginator = Paginator(obj_record,10)
+	obj_order = Order.objects.filter(username=request.user,status=4).order_by('-m_time')
+	paginator = Paginator(obj_order,10)
 	page = request.GET.get('page')
 	try:
-		obj_record = paginator.page(page)
+		obj_order = paginator.page(page)
 	except PageNotAnInteger:
-		obj_record = paginator.page(1)
+		obj_order = paginator.page(1)
 	except EmptyPage:
-		obj_record = paginator.page(paginator.num_pages)
+		obj_order = paginator.page(paginator.num_pages)
 	return render(request,'book/record.html',locals())
 
 
@@ -139,7 +140,7 @@ def record(request):
 def usercenter(request, slug=None):
 	username = request.user
 	form = UserEdit(instance=username)
-	password_old = User.objects.get(username=username).password
+	password_old = UserProfile.objects.get(username=username).password
 	if request.method == 'POST':
 		form = UserEdit(request.POST, instance=username)
 		if form.is_valid():

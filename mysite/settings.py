@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'captcha', # 验证码
     'book',
 ]
 
@@ -130,7 +131,7 @@ STATICFILES_DIRS  = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'book.User'
+AUTH_USER_MODEL = 'book.UserProfile'
 
 LOGIN_URL='/login/'
 
