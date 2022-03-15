@@ -23,4 +23,7 @@ urlpatterns = [
     path('book/usercenter/',views.usercenter,name='book_usercenter'),
     path('book/search/',views.search,name='book_search'),
 
+    # 后台功能
+    path('borrow_out/<int:oid>/',views.borrow_out,name='book_borrow_out'),
+
 ]

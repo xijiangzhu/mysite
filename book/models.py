@@ -6,6 +6,8 @@ from django.contrib import auth
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django import forms
+from django.utils.html import format_html
+
 
 # 用户信息
 class UserProfile(AbstractUser):
@@ -57,5 +59,16 @@ class Order(models.Model):
     status = models.SmallIntegerField(choices=choice_status,verbose_name='状态')
     class Meta:
         verbose_name_plural = '借阅订单'
+
+    def operator(self):
+        if self.status == 1:
+            return format_html(
+                '<button type="button" class="el-button el-button--default"><a href="/borrow_out/{}/">借出</a></button>',self.id
+            )
+        elif self.status == 3:
+            return format_html(
+                '<button type="button" class="el-button el-button--default"><a href="/return_in/{}/">归还</a></button>',self.id
+            )
+    operator.short_description = '操作'
 
 

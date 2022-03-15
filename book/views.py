@@ -165,3 +165,11 @@ def search(request):
 	except EmptyPage:
 		obj_book = paginator.page(paginator.num_pages)
 	return render(request,'book/list.html',locals())
+
+
+def borrow_out(request,oid):
+	obj_order = Order.objects.filter(id=oid).first()
+	with transaction.atomic():
+		obj_order.status = 2
+		obj_order.save()
+	return HttpResponse('已借出!')
