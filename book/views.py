@@ -4,13 +4,11 @@ from django.contrib import auth
 from .models import *
 
 # Create your views here.
-from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.contrib.auth.decorators import login_required
-from django.contrib import sessions
-from .myforms import *
+from .forms import *
 
 
 @login_required
@@ -123,7 +121,6 @@ def returning(request,rid):
 	return HttpResponseRedirect('/book/myborrow/')
 
 
-
 @login_required
 def record(request):
 	obj_record = Order.objects.filter(username=request.user,status=4).order_by('-m_time')
@@ -137,29 +134,23 @@ def record(request):
 		obj_record = paginator.page(paginator.num_pages)
 	return render(request,'book/record.html',locals())
 
-from django.contrib.auth.forms import UserChangeForm
+
 @login_required
 def usercenter(request, slug=None):
-	"""
-	Editar usuario de forma simple.
-	"""
 	username = request.user
+	form = UserEdit(instance=username)
+	password_old = User.objects.get(username=username).password
 	if request.method == 'POST':
 		form = UserEdit(request.POST, instance=username)
 		if form.is_valid():
-			# 密码加密
+			password_new = request.POST.get('password')
 			user = form.save()
-			user.set_password(user.password)
+			if password_new != password_old:
+				# 密码加密
+				user.set_password(user.password)
 			user.save()
-			#Emessages.success(request, 'Usuario actualizado exitosamente.', extra_tags='html_dante')
-			return HttpResponseRedirect('/book/usercenter/')
-	else:
-		form = UserEdit(instance=username)
-		context = {
-        	'form': form,
-    	}
-	return render(request, 'book/usercenter.html', context)
-
+			return HttpResponseRedirect('/book/usercenter/')	
+	return render(request, 'book/usercenter.html', {'form':form})
 
 
 @login_required

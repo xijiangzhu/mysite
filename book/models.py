@@ -14,7 +14,7 @@ class User(AbstractUser):
         ('female','女'),
     )
     gender = models.CharField(max_length=6,choices=choice_gender,default='male',verbose_name='性别')
-    mobile = models.IntegerField(null=True,blank=False,verbose_name='手机号码')
+    mobile = models.IntegerField(null=True,blank=True,verbose_name='手机号码')
     class Meta:
         verbose_name_plural = '用户列表'
     def __str__(self):
