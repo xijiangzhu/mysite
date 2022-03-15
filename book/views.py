@@ -109,15 +109,13 @@ def myborrow(request):
 
 @login_required
 def returning(request,oid):
-	#obj_order1 = Order.objects.filter(id=rid).first()
-	bid = Order.objects.filter(id=oid).first().book_id
-	obj_book = Book.objects.filter(id=bid).first()
-	#bid = obj_order1.book_id
+	#bid = Order.objects.filter(id=oid).first().book_id
+	#obj_book = Book.objects.filter(id=bid).first()
 	obj_order = Order.objects.get(username=request.user,id=oid)
 	with transaction.atomic():
-		obj_book.count = obj_book.count + 1
+		#obj_book.count = obj_book.count + 1
 		obj_order.status = 3
-		obj_book.save()
+		#obj_book.save()
 		obj_order.save()
 	return HttpResponseRedirect('/book/myborrow/')
 
