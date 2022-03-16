@@ -10,6 +10,7 @@
 {% block content %}
 <h3 class="sub-header">图书详情</h3>
 {% for field in obj_book %}
+<div style="height:50px;margin-top:20px"><a href="#" onclick="javascript:history.go(-1);"><< 返回上一页</a></div>
 <div class='row'>
   <div class="col-md-5"><img src="{% url 'book_index' %}media/{{field.img}}" /></div>
   <div class="col-md-7">
@@ -65,7 +66,7 @@
     <div class="btn btn-default"><a href="/book/{{field.id}}/borrow">借阅</a></div>
     {% endif %}
 
-    <div style="margin-top:50px"><a href="#" onclick="javascript:history.go(-1);">返回上一页</a></div>
+
   </div>
   {% endfor %}
   {% endblock %}

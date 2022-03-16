@@ -87,11 +87,21 @@ def borrow(request,bid):
 	user_id = UserProfile.objects.filter(username=request.user).first().id
 	with transaction.atomic():
 		obj_book.count = obj_book.count - 1
-		obj_order = Order(username_id=user_id,book_id=bid,status=1)
-			
+		obj_order = Order(username_id=user_id,book_id=bid,status=1)	
 		obj_book.save()
 		obj_order.save()
-		return HttpResponseRedirect(reverse('book_list'))
+		return redirect('book_detail',bid=obj_book.id)
+
+# 取消预定
+def cancel_reserve(request,oid):
+	book_id = Order.objects.filter(id=oid).first().book_id
+	obj_book = Book.objects.filter(id=book_id).first()
+	with transaction.atomic():
+		obj_book.count = obj_book.count + 1
+		obj_order = Order(id=oid,status=5)
+		obj_book.save()
+		obj_order.save()
+		return redirect('book_myborrow')
 
 
 @login_required
@@ -118,8 +128,15 @@ def returning(request,oid):
 		obj_order.status = 3
 		#obj_book.save()
 		obj_order.save()
-	return HttpResponseRedirect('/book/myborrow/')
+		return HttpResponseRedirect('/book/myborrow/')
 
+# 取消归还
+def cancel_return(request,oid):
+	obj_order = Order.objects.get(username=request.user,id=oid)
+	with transaction.atomic():
+		obj_order.status = 2
+		obj_order.save()
+		return HttpResponseRedirect('/book/myborrow/')
 
 @login_required
 def record(request):
@@ -173,7 +190,7 @@ def borrow_out(request,oid):
 	with transaction.atomic():
 		obj_order.status = 2
 		obj_order.save()
-	return HttpResponse('已借出!')
+		return HttpResponse('已借出!')
 
 def return_in(request,oid):
 	bid = Order.objects.filter(id=oid).first().book_id
@@ -184,4 +201,4 @@ def return_in(request,oid):
 		obj_order.status = 4
 		obj_book.save()
 		obj_order.save()
-	return HttpResponse('归还成功！')
+		return HttpResponse('归还成功！')

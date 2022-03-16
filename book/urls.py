@@ -21,6 +21,8 @@ urlpatterns = [
     path('book/record/',views.record,name='book_record'),
     path('book/usercenter/',views.usercenter,name='book_usercenter'),
     path('book/search/',views.search,name='book_search'),
+    path('book/<int:oid>/cancel_reserve/',views.cancel_reserve,name='book_cancel_reserve'),
+    path('book/<int:oid>/cancel_return/',views.cancel_return,name='book_cancel_return'),
 
     # 后台审核功能
     path('borrow_out/<int:oid>/',views.borrow_out,name='borrow_out'),

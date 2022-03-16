@@ -28,10 +28,12 @@
         <td>{{field.username}}</td>
         <td>{{field.get_status_display}}</td>
         <td>
-          {% if field.status == 2 %}
+          {% if field.status == 1  %}
+          <span>预定中</span>  <a href="/book/{{field.id}}/cancel_reserve/">取消</a>
+          {% elif field.status == 2 %}
           <a href="/book/{{field.id}}/return/">归还</a>
-          {% else %}
-          <span>待审核</span>
+          {% elif field.status == 3 %}
+          <span>归还中</span>  <a href="/book/{{field.id}}/cancel_return/">取消</a>
         </td>
         {% endif %}
       </tr>

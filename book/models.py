@@ -52,6 +52,7 @@ class Order(models.Model):
         (2,'已借阅'),
         (3,'归还中'),
         (4,'已归还'),
+        (5,'已取消'),
     )
     m_time = models.DateTimeField(auto_now=True,verbose_name='更新时间')
     username = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='log_username',verbose_name='用户')
