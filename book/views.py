@@ -1,3 +1,4 @@
+from urllib.request import HTTPRedirectHandler
 from django.shortcuts import redirect, render
 from django.contrib import auth
 #from django.contrib.auth.models import User
@@ -173,3 +174,14 @@ def borrow_out(request,oid):
 		obj_order.status = 2
 		obj_order.save()
 	return HttpResponse('已借出!')
+
+def return_in(request,oid):
+	bid = Order.objects.filter(id=oid).first().book_id
+	obj_book = Book.objects.filter(id=bid).first()
+	obj_order = Order.objects.get(id=oid)
+	with transaction.atomic():
+		obj_book.count = obj_book.count + 1
+		obj_order.status = 4
+		obj_book.save()
+		obj_order.save()
+	return HttpResponse('归还成功！')

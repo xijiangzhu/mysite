@@ -4,7 +4,6 @@ from mysite import settings
 from . import views
 
 urlpatterns = [
-    # 用户管理
     path('',views.index,name='book_index'),
     path('login/',views.login,name='book_login'),
     path('register/',views.register,name='book_register'),
@@ -23,7 +22,8 @@ urlpatterns = [
     path('book/usercenter/',views.usercenter,name='book_usercenter'),
     path('book/search/',views.search,name='book_search'),
 
-    # 后台功能
-    path('borrow_out/<int:oid>/',views.borrow_out,name='book_borrow_out'),
+    # 后台审核功能
+    path('borrow_out/<int:oid>/',views.borrow_out,name='borrow_out'),
+    path('return_in/<int:oid>/',views.return_in,name='renturn_in'),
 
 ]
