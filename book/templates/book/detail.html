@@ -56,11 +56,11 @@
     {% if field.count <= 0 %}
     <div class="btn btn-default"><a style="color:#CCC">无库存</a></div>
     {% elif obj_order.status == 1 %}
-    <div class="btn btn-default"><a style="color:#CCC">已预定</a></div>
+    <div class="btn btn-default"><a style="color:#F00">已预定</a></div>
     {% elif obj_order.status == 2 %}
-    <div class="btn btn-default"><a style="color:#CCC">已借阅</a></div>
+    <div class="btn btn-default"><a style="color:#F00">已借阅</a></div>
     {% elif obj_order.status == 3 %}
-    <div class="btn btn-default"><a style="color:#CCC">归还中</a></div>
+    <div class="btn btn-default"><a style="color:#F00">归还中</a></div>
     {% else %}
     <div class="btn btn-default"><a href="/book/{{field.id}}/borrow">借阅</a></div>
     {% endif %}

@@ -63,11 +63,11 @@ class Order(models.Model):
     def operator(self):
         if self.status == 1:
             return format_html(
-                '<button type="button" class="el-button el-button--default"><a href="/borrow_out/{}/">借出</a></button>',self.id
+                '<button type="button" class="el-button el-button--primary el-button--small"><a href="/borrow_out/{}/"><span style="color:#FFF">借出</span></a></button>',self.id
             )
         elif self.status == 3:
             return format_html(
-                '<button type="button" class="el-button el-button--default"><a href="/return_in/{}/">归还</a></button>',self.id
+                '<button type="button" class="el-button stop-submit el-button--danger el-button--small"><a href="/return_in/{}/"><span style="color:#FFF">归还</span></a></button>',self.id
             )
     operator.short_description = '操作'
 
