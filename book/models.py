@@ -60,15 +60,17 @@ class Order(models.Model):
     class Meta:
         verbose_name_plural = '借阅订单'
 
-    def operator(self):
+    def audit(self):
         if self.status == 1:
             return format_html(
-                '<button type="button" class="el-button el-button--primary el-button--small"><a href="/borrow_out/{}/"><span style="color:#FFF">借出</span></a></button>',self.id
+                '<button type="button" class="el-button el-button--primary el-button--small"> \
+                <a href="/borrow_out/{}/"><span style="color:#FFF">借出</span></a></button>',self.id
             )
         elif self.status == 3:
             return format_html(
-                '<button type="button" class="el-button stop-submit el-button--danger el-button--small"><a href="/return_in/{}/"><span style="color:#FFF">归还</span></a></button>',self.id
+                '<button type="button" class="el-button stop-submit el-button--danger el-button--small"> \
+                <a href="/return_in/{}/"><span style="color:#FFF">归还</span></a></button>',self.id
             )
-    operator.short_description = '操作'
+    audit.short_description = '审核'
 
 

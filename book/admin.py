@@ -34,7 +34,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id','username','book','m_time','status','operator')
+    list_display = ('id','username','book','m_time','status','audit')
     list_per_page = 50
     list_filter = ('status','id','book','username',)
     #list_editable = ('status',)
