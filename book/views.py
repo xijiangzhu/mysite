@@ -96,9 +96,10 @@ def borrow(request,bid):
 def cancel_reserve(request,oid):
 	book_id = Order.objects.filter(id=oid).first().book_id
 	obj_book = Book.objects.filter(id=book_id).first()
+	obj_order = Order.objects.filter(id=oid).first()
 	with transaction.atomic():
 		obj_book.count = obj_book.count + 1
-		obj_order = Order(id=oid,status=5)
+		obj_order.status = 5
 		obj_book.save()
 		obj_order.save()
 		return redirect('book_myborrow')
@@ -140,7 +141,7 @@ def cancel_return(request,oid):
 
 @login_required
 def record(request):
-	obj_order = Order.objects.filter(username=request.user,status=4).order_by('-m_time')
+	obj_order = Order.objects.filter(username=request.user,status__gte=4).order_by('-m_time')
 	paginator = Paginator(obj_order,10)
 	page = request.GET.get('page')
 	try:
