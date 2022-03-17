@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('book.urls')),
     path('captcha/', include('captcha.urls')), # 验证码
+    path('password-reset/', include('password_reset.urls')), # 重置密码
 ]

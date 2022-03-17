@@ -32,7 +32,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'simpleui',
+    'password_reset', # 重置密码
+    'simpleui', # 后台ui
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'captcha', # 验证码
-    'book',
+    'book', # APP
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,12 @@ LOGIN_URL='/login/'
 #设置文件上传路径，图片上传、文件上传都会存放在此目录里
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# 邮件发送配置
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_HOST_USER = 'xijiangzhu@qq.com'
+EMAIL_HOST_PASSWORD = 'ykulfxcmykqxbjih'
+EMAIL_PORT = 25
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = '图书管理系统<xijiangzhu@qq.com>'
