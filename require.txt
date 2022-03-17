@@ -1,0 +1,4 @@
+django-simpleui
+django-simple-captcha
+django-password-reset
+PyMySQL
