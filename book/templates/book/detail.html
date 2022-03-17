@@ -13,63 +13,61 @@
 {% block content %}
 <h3 class="sub-header">图书详情</h3>
 {% for field in obj_book %}
-<div style="height:50px;margin-top:20px"><a href="#" onclick="javascript:history.go(-1);"><< 返回上一页</a></div>
-<div class='row'>
-  <div class="col-md-5"><img src="{% url 'book_index' %}media/{{field.img}}" /></div>
-  <div class="col-md-7">
-    <div class="table-responsive">
-      <table class="table table-striped">
-        <tbody>
-          <tr>
-            <td>ID:</td>
-            <td>{{field.id}}</td>
-          </tr>
-          <tr>
-            <td>书名:</td>
-            <td>{{field.name}}</td>
-          </tr>
-          <tr>
-            <td>作者：</td>
-            <td>{{field.author}}</td>
-          </tr>
-          <tr>
-            <td>出版社：</td>
-            <td>{{field.publisher}}</td>
-          </tr>
-          <tr>
-            <td>入库时间：</td>
-            <td>{{field.create_time}}</td>
-          </tr>
-          <tr>
-            <td>类别：</td>
-            <td>{{field.category}}</td>
-          </tr>
-          <tr>
-            <td>库存：</td>
-            <td>{{field.count}}</td>
-          </tr>
-          <tr>
-            <td nowrap='nowrap'>内容简介：</td>
-            <td>{{field.content}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div style="height:50px;margin-top:20px"><a href="#" onclick="javascript:history.go(-1);">
+    << 返回上一页</a> </div> <div class='row'>
+      <div class="col-md-5"><img src="{% url 'book_index' %}media/{{field.img}}" /></div>
+      <div class="col-md-7">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <tbody>
+              <tr>
+                <td>ID:</td>
+                <td>{{field.id}}</td>
+              </tr>
+              <tr>
+                <td>书名:</td>
+                <td>{{field.name}}</td>
+              </tr>
+              <tr>
+                <td>作者：</td>
+                <td>{{field.author}}</td>
+              </tr>
+              <tr>
+                <td>出版社：</td>
+                <td>{{field.publisher}}</td>
+              </tr>
+              <tr>
+                <td>入库时间：</td>
+                <td>{{field.create_time}}</td>
+              </tr>
+              <tr>
+                <td>类别：</td>
+                <td>{{field.category}}</td>
+              </tr>
+              <tr>
+                <td>库存：</td>
+                <td>{{field.count}}</td>
+              </tr>
+              <tr>
+                <td nowrap='nowrap'>内容简介：</td>
+                <td>{{field.content}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
+        {% if obj_order.status == 1 %}
+        <div class="btn btn-default disabled"><a style="color:#F00">预定中</a></div>
+        {% elif obj_order.status == 2 %}
+        <div class="btn btn-default disabled"><a style="color:#F00">已借阅</a></div>
+        {% elif obj_order.status == 3 %}
+        <div class="btn btn-default disabled"><a style="color:#F00">归还中</a></div>
+        {% elif field.count <= 0 %}
+        <div class="btn btn-default disabled"><a style="color:#CCC">无库存</a></div>
+        {% else %}
+        <div class="btn btn-default"><a href="/book/{{field.id}}/borrow">借阅</a></div>
+        {% endif %}
 
-    {% if field.count <= 0 %}
-    <div class="btn btn-default"><a style="color:#CCC">无库存</a></div>
-    {% elif obj_order.status == 1 %}
-    <div class="btn btn-default"><a style="color:#F00">已预定</a></div>
-    {% elif obj_order.status == 2 %}
-    <div class="btn btn-default"><a style="color:#F00">已借阅</a></div>
-    {% elif obj_order.status == 3 %}
-    <div class="btn btn-default"><a style="color:#F00">归还中</a></div>
-    {% else %}
-    <div class="btn btn-default"><a href="/book/{{field.id}}/borrow">借阅</a></div>
-    {% endif %}
-
-
-  </div>
-  {% endfor %}
-  {% endblock %}
+      </div>
+      {% endfor %}
+      {% endblock %}
