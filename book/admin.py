@@ -18,7 +18,6 @@ class UserProfileAdmin(UserAdmin):
     list_per_page = 50
     list_display_links = ('id','username')
     list_filter = ('username','mobile','email')
-#admin.site.register(UserProfile,UserAdmin)
 
 @admin.register(Book)
 class BooksAdmin(admin.ModelAdmin):
@@ -37,5 +36,4 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ('id','username','book','m_time','status','audit')
     list_per_page = 50
     list_filter = ('status','id','book','username',)
-    #list_editable = ('status',)
-    list_display_links = ('id','username','book')
+    list_display_links = ('id','book')

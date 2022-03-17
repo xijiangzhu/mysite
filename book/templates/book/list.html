@@ -21,7 +21,6 @@
         <th>作者</th>
         <th>出版社</th>
         <th>库存</th>
-        <th>入库时间</th>
       </tr>
     </thead>
     <tbody>
@@ -36,7 +35,6 @@
         {% else %}
         <td>{{field.count}}</td>
         {% endif %}
-        <td>{{field.create_time}}</td>
       </tr>
       {% endfor %}
     </tbody>
