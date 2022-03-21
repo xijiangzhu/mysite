@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'password_reset', # 重置密码
     'simpleui', # 后台ui
+    'blog.DjangoUeditor', # 富文本编辑器
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'captcha', # 验证码
     'book', # APP
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'blog.views.global_variable', # 全局参数
             ],
         },
     },
@@ -123,9 +126,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS  = [
-    os.path.join(BASE_DIR,'static'),
-]
+#STATICFILES_DIRS  = [
+ #   os.path.join(BASE_DIR,'static'),
+#    os.path.join(BASE_DIR,'blog/static'),
+#    os.path.join(BASE_DIR,'book/static'),
+#]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -134,7 +139,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'book.UserProfile'
 
-LOGIN_URL='/login/'
+LOGIN_URL='/book/login/'
 
 #设置文件上传路径，图片上传、文件上传都会存放在此目录里
 MEDIA_URL = '/media/'

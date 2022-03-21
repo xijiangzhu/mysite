@@ -1,4 +1,4 @@
-from django.urls import  path,re_path
+from django.urls import  path,re_path,include
 from django.views.static import serve
 from mysite import settings
 from . import views
@@ -13,19 +13,22 @@ urlpatterns = [
     re_path(r'media/(?P<path>.*)$',serve,{'document_root':settings.MEDIA_ROOT}),
  
     # 图书管理
-    path('book/list/',views.list,name='book_list'),
-    path('book/<int:bid>/detail/',views.detail,name='book_detail'),
-    path('book/<int:bid>/borrow/',views.borrow,name='book_borrow'),
-    path('book/<int:oid>/return/',views.returning,name='book_returning'),
-    path('book/myborrow/',views.myborrow,name='book_myborrow'),
-    path('book/record/',views.record,name='book_record'),
-    path('book/usercenter/',views.usercenter,name='book_usercenter'),
-    path('book/search/',views.search,name='book_search'),
-    path('book/<int:oid>/cancel_reserve/',views.cancel_reserve,name='book_cancel_reserve'),
-    path('book/<int:oid>/cancel_return/',views.cancel_return,name='book_cancel_return'),
+    path('list/',views.list,name='book_list'),
+    path('<int:bid>/detail/',views.detail,name='book_detail'),
+    path('<int:bid>/borrow/',views.borrow,name='book_borrow'),
+    path('<int:oid>/return/',views.returning,name='book_returning'),
+    path('myborrow/',views.myborrow,name='book_myborrow'),
+    path('record/',views.record,name='book_record'),
+    path('usercenter/',views.usercenter,name='book_usercenter'),
+    path('search/',views.search,name='book_search'),
+    path('<int:oid>/cancel_reserve/',views.cancel_reserve,name='book_cancel_reserve'),
+    path('<int:oid>/cancel_return/',views.cancel_return,name='book_cancel_return'),
 
     # 后台审核功能
     path('borrow_out/<int:oid>/',views.borrow_out,name='borrow_out'),
     path('return_in/<int:oid>/',views.return_in,name='renturn_in'),
+
+    #path('captcha/', include('captcha.urls')), # 验证码
+    path('password-reset/', include('password_reset.urls')), # 重置密码
 
 ]

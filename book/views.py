@@ -38,7 +38,7 @@ def register(request):
 # 登录
 def login(request):
 	if request.user.is_authenticated:
-		return HttpResponseRedirect('/')
+		return HttpResponseRedirect('/book/')
 	else:
 		if request.method == 'POST':
 			form = LoginModelForm(request.POST)
@@ -48,7 +48,7 @@ def login(request):
 				user = auth.authenticate(username=username,password=password)
 				if user:
 					auth.login(request,user)
-					return HttpResponseRedirect('/')
+					return HttpResponseRedirect('/book/list/')
 			return render(request,'book/login.html', {'form': form})
 		else:
 			form = LoginModelForm()
@@ -57,7 +57,7 @@ def login(request):
 # 注销
 def logout(request):
 	auth.logout(request)
-	return HttpResponseRedirect('/login/')
+	return HttpResponseRedirect('/book/login/')
 
 # 图书列表
 @login_required
