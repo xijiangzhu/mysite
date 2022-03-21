@@ -13,12 +13,12 @@ from .forms import *
 from .models import *
 from django.db import transaction
 
-
+# 首页
 @login_required
 def index(request):
 	return HttpResponseRedirect('/book/list/')
 
-
+# 注册
 def register(request):
 	if request.method == "POST":
 		form = RegisterModelForm(request.POST)
@@ -35,7 +35,7 @@ def register(request):
 		form = RegisterModelForm()
 	return render(request,"book/register.html",{'form':form})
 
-
+# 登录
 def login(request):
 	if request.user.is_authenticated:
 		return HttpResponseRedirect('/')
@@ -54,12 +54,12 @@ def login(request):
 			form = LoginModelForm()
 			return render(request,'book/login.html', {'form': form})
 
-
+# 注销
 def logout(request):
 	auth.logout(request)
 	return HttpResponseRedirect('/login/')
 
-
+# 图书列表
 @login_required
 def list(request):
 	obj_book = Book.objects.all()
@@ -73,7 +73,7 @@ def list(request):
 		obj_book = paginator.page(paginator.num_pages)
 	return render(request,'book/list.html',locals())
 
-
+# 图书详情页
 @login_required
 def detail(request,bid):
 	if request.method == 'GET':
@@ -81,7 +81,7 @@ def detail(request,bid):
 		obj_order = Order.objects.filter(username=request.user,book_id=bid,status__lt=4).first()
 		return render(request,'book/detail.html',locals())
 
-
+# 借阅
 def borrow(request,bid):
 	obj_book = Book.objects.filter(id=bid).first()
 	user_id = UserProfile.objects.filter(username=request.user).first().id
@@ -104,7 +104,7 @@ def cancel_reserve(request,oid):
 		obj_order.save()
 		return redirect('book_myborrow')
 
-
+# 我的借阅
 @login_required
 def myborrow(request):
 	obj_order = Order.objects.filter(username=request.user,status__lt=4).order_by('-m_time')
@@ -118,16 +118,12 @@ def myborrow(request):
 		obj_order = paginator.page(paginator.num_pages)
 	return render(request,'book/myborrow.html',locals())
 
-
+# 归还
 @login_required
 def returning(request,oid):
-	#bid = Order.objects.filter(id=oid).first().book_id
-	#obj_book = Book.objects.filter(id=bid).first()
 	obj_order = Order.objects.get(username=request.user,id=oid)
 	with transaction.atomic():
-		#obj_book.count = obj_book.count + 1
 		obj_order.status = 3
-		#obj_book.save()
 		obj_order.save()
 		return HttpResponseRedirect('/book/myborrow/')
 
@@ -139,6 +135,7 @@ def cancel_return(request,oid):
 		obj_order.save()
 		return HttpResponseRedirect('/book/myborrow/')
 
+# 借阅记录
 @login_required
 def record(request):
 	obj_order = Order.objects.filter(username=request.user,status__gte=4).order_by('-m_time')
@@ -152,7 +149,7 @@ def record(request):
 		obj_order = paginator.page(paginator.num_pages)
 	return render(request,'book/record.html',locals())
 
-
+# 个人中心
 @login_required
 def usercenter(request, slug=None):
 	username = request.user
@@ -170,7 +167,7 @@ def usercenter(request, slug=None):
 			return HttpResponseRedirect('/book/usercenter/')	
 	return render(request, 'book/usercenter.html', {'form':form})
 
-
+# 图书搜索
 @login_required
 def search(request):
 	search = request.GET.get('search')
@@ -185,7 +182,7 @@ def search(request):
 		obj_book = paginator.page(paginator.num_pages)
 	return render(request,'book/list.html',locals())
 
-
+# 后台审核：借出
 def borrow_out(request,oid):
 	obj_order = Order.objects.filter(id=oid).first()
 	with transaction.atomic():
@@ -193,6 +190,7 @@ def borrow_out(request,oid):
 		obj_order.save()
 		return HttpResponse('已借出!')
 
+# 后台审核：归还
 def return_in(request,oid):
 	bid = Order.objects.filter(id=oid).first().book_id
 	obj_book = Book.objects.filter(id=bid).first()
