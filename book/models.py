@@ -65,12 +65,12 @@ class Order(models.Model):
         if self.status == 1:
             return format_html(
                 '<button type="button" class="el-button el-button--primary el-button--small"> \
-                <a href="/borrow_out/{}/"><span style="color:#FFF">借出</span></a></button>',self.id
+                <a href="/book/borrow_out/{}/"><span style="color:#FFF">借出</span></a></button>',self.id
             )
         elif self.status == 3:
             return format_html(
                 '<button type="button" class="el-button stop-submit el-button--danger el-button--small"> \
-                <a href="/return_in/{}/"><span style="color:#FFF">归还</span></a></button>',self.id
+                <a href="/book/return_in/{}/"><span style="color:#FFF">归还</span></a></button>',self.id
             )
     audit.short_description = '审核'
 

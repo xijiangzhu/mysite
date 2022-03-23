@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.http import HttpResponse 
-from .models import Article,Category,Banner,Tag,Link
+from blog.models import Article,Category,Banner,Tag,Link
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 
 def index(request):
